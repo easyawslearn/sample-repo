@@ -1,0 +1,24 @@
+name: AI Code Review and Merge
+
+on: [pull_request]
+
+jobs:
+  review-and-merge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Use Maverick for code review
+        run: echo "Maverick runs automatically once configured in GitHub Marketplace."
+
+      - name: Auto merge PR after successful Maverick review
+        uses: "pascalgn/automerge-action@v0.14.2"
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          MERGE_LABELS: "automerge,!work in progress"
+          MERGE_METHOD: "squash"
+          MERGE_COMMIT_MESSAGE: "pull-request-description"
+          MERGE_RETRIES: "6"
+          MERGE_RETRY_SLEEP: "10000"
+          PR_READY_TO_MERGE_LABEL: "pass"
