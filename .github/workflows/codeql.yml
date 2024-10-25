@@ -19,14 +19,25 @@ jobs:
       - name: Install Maverick
         run: |
           sudo snap install copilot-client
+          # Verify installation
+          snap list copilot-client || echo "Maverick installation failed"
+
+      - name: Check Maverick Installation
+        run: |
+          echo "Checking if copilot-client is available..."
+          if ! command -v copilot-client &> /dev/null; then
+              echo "copilot-client not found. Checking installation..."
+              snap list
+          else
+              echo "copilot-client found!"
+          fi
 
       - name: Run Maverick Analysis
         id: maverick_analysis
         run: |
           echo "Running Maverick analysis on the codebase..."
-          # Replace with the actual command to run the analysis
-          # For example, if Maverick has a command like 'maverick analyze', use it here
-          copilot-client analyze --config maverick-config.yml
+          # Use the full path if necessary. You can find it using `which copilot-client`
+          /snap/bin/copilot-client analyze --config maverick-config.yml
 
       - name: Install GitHub CLI
         run: |
