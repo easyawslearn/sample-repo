@@ -1,4 +1,4 @@
-name: "CodeQL Analysis"
+name: "Maverick Analysis"
 
 on:
   push:
@@ -11,26 +11,24 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        language: [javascript, python]  # Adjust languages as needed
-        build-mode: [auto, manual]      # Adjust build modes as needed
+        build-mode: [auto, manual]  # Define other relevant configurations if needed
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3
-        with:
-          languages: ${{ matrix.language }}
-          build-mode: ${{ matrix.build-mode }}
+      - name: Setup Maverick
+        run: |
+          echo "Setting up Maverick..."
+          # Add any additional setup commands here if required by Maverick
 
       - if: matrix.build-mode == 'manual'
         shell: bash
         run: |
-          echo 'Manual build mode is enabled'
-          make bootstrap  # Replace with actual commands
+          echo "Building code in manual mode"
+          make bootstrap  # Replace with actual build commands for your project
           make release
 
-      - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v3
-        with:
-          category: "/language:${{matrix.language}}"
+      - name: Run Maverick Analysis
+        run: |
+          echo "Running Maverick analysis on the codebase..."
+          ./maverick analyze --config maverick-config.yml  # Replace with actual Maverick command
