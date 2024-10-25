@@ -11,24 +11,25 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        build-mode: [auto, manual]  # Define other relevant configurations if needed
+        build-mode: [auto, manual]
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Maverick
+      - name: Download Maverick
         run: |
-          echo "Setting up Maverick..."
-          # Add any additional setup commands here if required by Maverick
+          curl -L -o maverick https://example.com/path/to/maverick  # Replace with actual URL
+          chmod +x maverick
 
       - if: matrix.build-mode == 'manual'
         shell: bash
         run: |
           echo "Building code in manual mode"
-          make bootstrap  # Replace with actual build commands for your project
+          make bootstrap  # Replace with actual build commands
           make release
 
       - name: Run Maverick Analysis
         run: |
           echo "Running Maverick analysis on the codebase..."
-          ./maverick analyze --config maverick-config.yml  # Replace with actual Maverick command
+          ./maverick analyze --config maverick-config.yml
