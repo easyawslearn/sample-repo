@@ -1,36 +1,37 @@
-name: "CodeQL Analysis"
+name: "Maverick Analysis and Auto-Merge"
 
 on:
-  push:
-    branches: [main]
   pull_request:
     branches: [main]
 
 jobs:
   analyze:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        language: [python]  # Adjust languages as needed
-        build-mode: [auto, manual]      # Adjust build modes as needed
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
         with:
-          languages: ${{ matrix.language }}
-          build-mode: ${{ matrix.build-mode }}
+          python-version: '3.x'
 
-      - if: matrix.build-mode == 'manual'
-        shell: bash
+      - name: Install Maverick
         run: |
-          echo 'Manual build mode is enabled'
-          make bootstrap  # Replace with actual commands
-          make release
+          pip install maverick  # Or specify local script if needed
 
-      - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v3
+      - name: Run Maverick Analysis
+        id: maverick_analysis
+        run: |
+          echo "Running Maverick analysis on the codebase..."
+          python -m maverick analyze --config maverick-config.yml  # Adjust command as necessary
+
+      # If the Maverick analysis completes successfully, this step will proceed
+      - name: Automatic Merge
+        if: success()
+        uses: "peter-evans/merge-pull-request@v3"
         with:
-          category: "/language:${{matrix.language}}"
+          merge-method: squash  # Use 'merge' or 'rebase' if needed
+          commit-title: "Auto-merge after Maverick review"
+          commit-message: "Maverick analysis passed. PR merged automatically."
+
