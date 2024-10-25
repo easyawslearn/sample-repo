@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        language: [javascript, python]  # Adjust languages as needed
+        language: [python]  # Adjust languages as needed
         build-mode: [auto, manual]      # Adjust build modes as needed
     steps:
       - name: Checkout repository
