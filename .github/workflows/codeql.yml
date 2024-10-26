@@ -21,6 +21,10 @@ jobs:
           sudo snap install copilot-client
           # Verify installation
           snap list copilot-client || echo "Maverick installation failed"
+          
+      - name: Install GitHub Copilot CLI
+        run: |
+          sudo snap install copilot-cli --classic
 
       - name: Check Maverick Installation
         run: |
